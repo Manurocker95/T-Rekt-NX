@@ -29,12 +29,13 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 #include <vector>
 #include "Button.hpp"
 #include "Toggle.hpp"
+#include "Meteorite.hpp"
 
 class GameScreen : public Scene
 {
 
 private:
-
+	//Texts
 	Text * m_scoreText;
 	Text * m_roundsText;
 	Text * m_infoText;
@@ -46,9 +47,14 @@ private:
 	std::vector < Dinosaur * > m_dinosaurs;
 	std::vector < Dinosaur * > m_aliveDinosaurs;
 
+	// Meteorites
+	std::vector <Meteorite*> m_meteos; 
+	std::vector <Meteorite*> m_fallingMeteos;
+
+	// Music
 	MusicSound * m_gameBGM;
 	SfxSound * m_tapSFX;
-
+	//BUttons && Toggles
 	Button * m_pauseBtn;
 	Button * m_exitBtn;
 	

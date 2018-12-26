@@ -38,7 +38,7 @@ GameScreen::GameScreen(Settings * settings) : Scene(settings)
 	this->m_spawned = 0;
 	this->m_solved = 0;
 	this->m_maxSpawn = 1;
-	this->m_rounds = 1;
+	this->m_rounds = 0;
 	this->m_timeToStart = 0;
 	this->m_timeToSpawn = 0;
 	this->m_lastTime = 0;
@@ -88,6 +88,15 @@ GameScreen::~GameScreen()
 		delete(dino);
 	}
 	this->m_dinosaurs.clear();
+
+	this->m_fallingMeteos.clear();
+
+	for (const auto & meteo : this->m_meteos)
+	{
+		meteo->End(this->m_helper);
+		delete(meteo);
+	}
+	this->m_meteos.clear();
 }
 
 void GameScreen::Start(SDL_Helper * helper)
@@ -137,6 +146,13 @@ void GameScreen::Start(SDL_Helper * helper)
 		this->m_dinosaurs[j]->SetActive(true);
 		this->m_aliveDinosaurs.push_back(this->m_dinosaurs[j]);
 	}
+
+	int meteoSpace = SWITCH_SCREEN_WIDTH / NUMBER_OF_METEOS;
+	this->m_meteos.reserve(NUMBER_OF_METEOS);
+	for (int i = 0; i < NUMBER_OF_METEOS; i++)
+	{
+		m_meteos.push_back(new Meteorite(meteoSpace*i, -141, helper, IMG_METEORITE, 120, 141));
+	}
 }
 
 void GameScreen::EndGame()
@@ -149,9 +165,10 @@ void GameScreen::Draw()
 	this->m_background->Draw(this->m_helper);
 
 	for (const auto & dino : this->m_aliveDinosaurs)
-	{
 		dino->Draw(this->m_helper);
-	}
+
+	for (const auto & meteo : m_fallingMeteos)
+		meteo->Draw(this->m_helper);
 
 	this->m_scoreText->Draw(this->m_helper);
 	this->m_roundsText->Draw(this->m_helper);
@@ -200,25 +217,6 @@ void GameScreen::Update()
 			}
 		}
 
-		this->m_updateYear = (this->m_currentTime >  this->m_lastTime + FRAMES_PER_YEAR) ? true : false;
-
-		for (int i = 0; i < this->m_aliveDinosaurs.size(); i++)
-		{
-			if (this->m_updateYear)
-			{
-				this->m_aliveDinosaurs.at(i)->YearPassed();
-				// if has died
-				if (!this->m_aliveDinosaurs.at(i)->IsAlive())
-				{
-					this->m_aliveDinosaurs.erase(this->m_aliveDinosaurs.begin() + i);
-					continue;
-				}
-			}
-
-			this->m_aliveDinosaurs.at(i)->Update();
-			
-		}
-
 		if (!this->m_startGame)
 		{
 			switch (this->m_timeToStart)
@@ -235,6 +233,72 @@ void GameScreen::Update()
 				this->m_infoText->SetText("Go!!!!!");
 				this->m_infoText->SetX(455);
 				break;
+			}
+		}
+		else
+		{
+			if (this->m_fallingMeteos.size() == 0)
+			{
+				Spawn();
+			}
+			else
+			{
+				for (int j = 0; j < this->m_fallingMeteos.size(); j++)
+				{
+					if (this->m_fallingMeteos.at(j) == NULL)
+						continue;
+
+					if (this->m_fallingMeteos.at(j)->FellDown())
+					{
+						AddScore();
+						this->m_fallingMeteos.at(j)->ResetValue();
+						this->m_fallingMeteos.erase(this->m_fallingMeteos.begin() + j);
+						continue;
+					}
+					this->m_fallingMeteos.at(j)->Update();
+
+					for (int k = 0; k < this->m_aliveDinosaurs.size(); k++)
+					{
+						if (this->m_aliveDinosaurs.at(k) == NULL)
+							continue;
+
+						this->m_fallingMeteos.at(j)->CheckCollision(this->m_aliveDinosaurs.at(k));
+						this->m_aliveDinosaurs.at(k)->SetAlive(false);
+						this->m_aliveDinosaurs.at(k)->SetActive(false);
+						this->m_aliveDinosaurs.erase(this->m_aliveDinosaurs.begin() + k);
+					}
+					
+				}
+				
+			}
+
+			if (m_aliveDinosaurs.size() == 0)
+			{
+				SceneManager::Instance()->SaveData(this->m_score);
+				EndGame();
+				return;
+			}
+
+			this->m_updateYear = (this->m_currentTime >  this->m_lastTime + FRAMES_PER_YEAR) ? true : false;
+
+			for (int i = 0; i < this->m_aliveDinosaurs.size(); i++)
+			{
+				if (this->m_updateYear)
+				{
+					if (this->m_aliveDinosaurs.at(i) == NULL)
+						continue;
+
+					this->m_aliveDinosaurs.at(i)->YearPassed();
+					// if has died
+					if (!this->m_aliveDinosaurs.at(i)->IsAlive())
+					{
+						this->m_aliveDinosaurs.erase(this->m_aliveDinosaurs.begin() + i);
+						continue;
+					}
+				}
+
+				this->m_aliveDinosaurs.at(i)->Update();
+
 			}
 		}
 	}
@@ -342,7 +406,32 @@ void GameScreen::AddScore()
 
 void GameScreen::Spawn()
 {
+	++this->m_rounds;
 	this->m_roundsText->SetText("Rounds: " + std::to_string(this->m_rounds));
+
+	this->m_spawned = rand() % this->m_maxSpawn + 1; // Between 1 and Max
+	this->m_solved = this->m_spawned;
+
+	int num = 0;
+	for (int i = 0; i < m_spawned; i++)
+	{
+		num = rand() % (NUMBER_OF_METEOS-1) + 1;
+
+		if (!this->m_meteos.at(num)->GetFalling())
+		{
+			this->m_meteos.at(num)->SetFalling(true);
+			this->m_meteos.at(num)->SetActive(true);
+			this->m_fallingMeteos.push_back(m_meteos.at(num));
+		}
+	}
+
+	++this->m_rounds;
+
+	if (this->m_rounds % ROUNDS_MULTIPLIER == 0)
+		++this->m_maxSpawn;
+
+	if (m_maxSpawn >= NUMBER_OF_METEOS)
+		m_maxSpawn = NUMBER_OF_METEOS-1;
 }
 
 

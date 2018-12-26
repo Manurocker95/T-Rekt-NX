@@ -72,6 +72,11 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 #define TIME_TO_START 4
 #define FRAMES_PER_YEAR 10000
 
+#define SPAWN_MIN_X 100
+#define SPAWN_MAX_X 1100
+
+#define ROUNDS_MULTIPLIER 2
+
 class Settings
 {
 public:

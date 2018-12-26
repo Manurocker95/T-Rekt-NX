@@ -213,6 +213,9 @@ void Sprite::SetOpacityMode(bool _value)
 
 bool Sprite::CheckCollision(Sprite * _other)
 {
+	if (!this->m_active)
+		return false;
+
 	int x = _other->GetX();
 	int y = _other->GetY();
 	int width = _other->GetFrameSize(true);

@@ -88,6 +88,8 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 #define IMG_DINO_SPRITE_WALKING "romfs:/Assets/Graphics/dinoMaleWalking.png"
 #define IMG_DINO_SPRITE_F_WALKING "romfs:/Assets/Graphics/dinoMaleWalking.png"
 
+#define IMG_METEORITE "romfs:/Assets/Graphics/meteorite.png"
+
 /* Fonts */
 #define FONT_NORMAL "romfs:/Assets/Fonts/normal.ttf"
 
