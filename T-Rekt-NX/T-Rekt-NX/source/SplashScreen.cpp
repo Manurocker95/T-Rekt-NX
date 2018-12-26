@@ -29,7 +29,6 @@ SplashScreen::SplashScreen(Settings * settings) : Scene(settings)
 	this->m_scTimer = 0;
 	this->m_splashOpacity = 0;
 	this->m_sfxSplash = false;
-	this->m_changeScene = false;
 }
 
 // * Destructor

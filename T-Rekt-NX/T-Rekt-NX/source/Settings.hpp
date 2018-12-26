@@ -34,38 +34,40 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 // Time wait in loading screen in seconds
 #define LOADING_DELAY 2 
 
-#define DELTA_TIME_REDUCTION 1 // HALF TIME -> SDL_TICKS/(100*reduction)
+// HALF TIME -> SDL_TICKS/(100*reduction)
+#define DELTA_TIME_REDUCTION 2
 
 #define SCORE_TO_ADD 1
 #define SCORE_TO_ADD_WHEN_PROCREATE 5
 
 // Game Settings
-#define MAXNUMBEROFDINOS 10
+#define MAX_NUMBER_OF_DINOS 10
 #define NUMBER_PROCREATION 3
-#define STARTINGDINOSAURS 5
-#define DINOSAURMOVEMENT 10
-#define PIXELSBETWEENDINOS 240
+#define STARTING_DINOSAURS 5
+#define DINOSAUR_MOVEMENT 15
+#define MIN_DINOSAUR_MOVEMENT 5
+#define PIXELS_BETWEEN_DINOS 240
 
 //Ages Male
-#define AGETOBEADULTMALE 4000
-#define AGETOBEOLDMALE 9000
-#define AGETODIEMALE 10000
+#define AGE_TO_BE_ADULT_MALE 4000
+#define AGE_TO_BE_OLD_MALE 9000
+#define AGE_TO_DIE_MALE 10000
 
 //Ages Female
-#define AGETOBEADULTFEMALE 4000
-#define AGETOBEOLDFEMALE 9000
-#define AGETODIEFEMALE 10000
+#define AGE_TO_BE_ADULT_FEMALE 4000
+#define AGE_TO_BE_OLD_FEMALE 9000
+#define AGE_TO_DIE_FEMALE 10000
 
 //Ages to have babys... If you know what I mean
-#define AGEFORSEX 2500
+#define AGE_FOR_SEX 2500
 
 //Meteorite settings
-#define NUMOFMETEOS 10
-#define METEORITEMOVEMENT 3
-#define METEORITESCORE 1
+#define NUMBER_OF_METEOS 10
+#define METEORITE_MOVEMENT 3
+#define METEORITE_SCORE 1
 
 #define DINO_MIN_POS_X 100
-#define FLOOR_POS 768
+#define FLOOR_POS 668
 
 class Settings
 {

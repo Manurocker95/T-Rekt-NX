@@ -28,6 +28,8 @@ protected:
 	SDL_Texture * m_sprite;
 	int m_x;
 	int m_y;
+	int m_ox;
+	int m_oy;
 	int m_numFramesX;
 	int m_numFramesY;
 	int m_sizePerFrameX;
@@ -42,7 +44,7 @@ protected:
 	bool m_drawOpacity;
 
 public:
-	Sprite(int _x, int _y, SDL_Helper * _helper, char * _sprite, int _numFramesX, int _numFramesY, int _sizePerFrameX, int _sizePerFrameY, int _currentFrameX, int _currentFrameY, bool _multipleFrames, bool _animated, bool _opacityMode = false);
+	Sprite(int _x, int _y, SDL_Helper * _helper, char * _sprite, int _numFramesX, int _numFramesY, int _sizePerFrameX, int _sizePerFrameY, int _currentFrameX, int _currentFrameY, bool _multipleFrames, bool _animated, bool _opacityMode = false, int _ox = 0, int _oy = 0);
 	~Sprite() {};
 	virtual void MoveX(int _value);
 	virtual void MoveY(int _value);

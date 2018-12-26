@@ -24,22 +24,59 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 #include <random>
 #include <ctime>
 
-Dinosaur::Dinosaur(int _x, int _y, SDL_Helper * _helper, char * _sprite, bool _multipleFrames, int _numFramesX, int _numFramesY, int _sizePerFrameX, int _sizePerFrameY, bool _male) : Sprite (_x, _y, _helper, _sprite, _numFramesX, _numFramesY, _sizePerFrameX, _sizePerFrameY, 0, 0, _multipleFrames, true, false)
+Dinosaur::Dinosaur(int _x, int _y, SDL_Helper * _helper, char * _sprite, char * _walkingSprite, bool _multipleFrames, int _numFramesX, int _numFramesY, int _sizePerFrameX, int _sizePerFrameY, bool _male) : Sprite (_x, _y, _helper, _sprite, _numFramesX, _numFramesY, _sizePerFrameX, _sizePerFrameY, 0, 0, _multipleFrames, true, false, 30, 44)
 {
+	_helper->SDL_LoadImage(&this->m_walkingSprite, _walkingSprite);
+
 	this->m_currentDirection = Dinosaur::DIRECTION::LEFT;
 	this->m_state = Dinosaur::DINOSAUR_STATE::YOUNG;
 	this->m_age = 1;
 	this->m_male = _male;
 	this->m_alive = true;
-	this->m_invincible = false;
-	this->m_originalX = _x;
-	this->m_originalY = _y;
-	this->m_movement = (rand() % (DINOSAURMOVEMENT - 1)) + 1;
+	this->m_movement = (rand() % (DINOSAUR_MOVEMENT - 1)) + MIN_DINOSAUR_MOVEMENT;
+	this->m_active = false;
+	this->m_moving = false;
 }
 
 Dinosaur::~Dinosaur()
 {
 
+}
+
+
+void Dinosaur::Draw(SDL_Helper * _helper)
+{
+	if (this->m_active)
+	{
+		if (!this->m_moving)
+			_helper->SDL_DrawImageRect(this->m_sprite, this->m_x, this->m_y, this->m_currentFrameX * this->m_sizePerFrameX + this->m_ox, this->m_currentFrameY * this->m_sizePerFrameY + this->m_oy, this->m_sizePerFrameX - this->m_ox, this->m_sizePerFrameY - this->m_oy);
+		else
+			_helper->SDL_DrawImageRect(this->m_walkingSprite, this->m_x, this->m_y, this->m_currentFrameX * this->m_sizePerFrameX + this->m_ox, this->m_currentFrameY * this->m_sizePerFrameY + this->m_oy, this->m_sizePerFrameX - this->m_ox, this->m_sizePerFrameY - this->m_oy);
+
+
+		if (this->m_moving)
+		{
+			this->m_moving = false;
+			this->m_currentFrameX = 0;
+		}
+	
+	}
+}
+
+void Dinosaur::Update()
+{
+	if (this->m_active)
+	{
+		Uint32 ticks = SDL_GetTicks();
+		this->m_currentFrameX = ((ticks / (100 * DELTA_TIME_REDUCTION)) % this->m_numFramesX);
+
+		this->m_currentFrameX += (this->m_currentDirection * m_numFramesX);		
+	}
+}
+
+void Dinosaur::SetAlive(bool _value)
+{
+	this->m_alive = _value;
 }
 
 void Dinosaur::SetState(Dinosaur::DINOSAUR_STATE _state)
@@ -50,15 +87,23 @@ void Dinosaur::SetState(Dinosaur::DINOSAUR_STATE _state)
 	{
 	case Dinosaur::DINOSAUR_STATE::YOUNG:
 		this->m_currentFrameY = 0;
+		this->m_ox = 30;
+		this->m_oy = 44;
 		break;
 	case Dinosaur::DINOSAUR_STATE::ADULT:
 		this->m_currentFrameY = 1;
+		this->m_ox = 8;
+		this->m_oy = 0;
 		break;
 	case Dinosaur::DINOSAUR_STATE::ELDER:
 		this->m_currentFrameY = 2;
+		this->m_ox = 0;
+		this->m_oy = 24;
 		break;
 	case Dinosaur::DINOSAUR_STATE::EGG:
 		this->m_currentFrameY = 3;
+		this->m_ox = 35;
+		this->m_oy = 44;
 		break;
 	}
 }
@@ -73,14 +118,9 @@ Dinosaur::DINOSAUR_STATE Dinosaur::GetState()
 	return this->m_state;
 }
 
-void Dinosaur::SetInvincible(bool _value)
-{
-	this->m_invincible = _value;
-}
-
 bool Dinosaur::GetInvincible()
 {
-	return this->m_invincible;
+	return this->IsEgg();
 }
 
 bool Dinosaur::IsAlive()
@@ -107,12 +147,6 @@ bool Dinosaur::IsEgg()
 	return this->m_state == Dinosaur::DINOSAUR_STATE::EGG;
 }
 
-void Dinosaur::Reset()
-{
-	this->m_x = this->m_originalX;
-	this->m_y = this->m_originalY;
-}
-
 void Dinosaur::Die()
 {
 	this->m_alive = false;
@@ -125,7 +159,7 @@ bool Dinosaur::IsMale()
 
 bool Dinosaur::CanProcreate()
 {
-	if ((this->m_male && this->m_alive && this->m_age >= AGETOBEADULTMALE && this->m_age % AGEFORSEX == 0) || (!this->m_male && this->m_alive && this->m_age >= AGETOBEADULTFEMALE && this->m_age % AGEFORSEX == 0))
+	if ((this->m_male && this->m_alive && this->m_age >= AGE_TO_BE_ADULT_MALE && this->m_age % AGE_FOR_SEX == 0) || (!this->m_male && this->m_alive && this->m_age >= AGE_TO_BE_ADULT_FEMALE && this->m_age % AGE_FOR_SEX == 0))
 	{
 		return true;
 	}
@@ -139,10 +173,24 @@ void Dinosaur::Hatch(int _x)
 	this->m_active = true;
 	this->m_state = Dinosaur::DINOSAUR_STATE::EGG;
 	this->m_currentDirection = Dinosaur::DIRECTION::LEFT;
-	this->m_movement = (rand() % (DINOSAURMOVEMENT - 1)) + 1;
+	this->m_movement = (rand() % (DINOSAUR_MOVEMENT - 1)) + 1;
 }
+
 
 void Dinosaur::MoveX(int _value)
 {
-	this->m_x += this->m_movement * _value;
+	if (this->m_active && this->m_state != Dinosaur::DINOSAUR_STATE::EGG)
+	{
+		this->m_moving = true;
+		this->m_x += this->m_movement * _value;
+		if (_value < 0)
+			SetDirection(Dinosaur::DIRECTION::LEFT);
+		else
+			SetDirection(Dinosaur::DIRECTION::RIGHT);
+	}
+}
+
+void  Dinosaur::SetDirection(Dinosaur::DIRECTION _direction)
+{
+	this->m_currentDirection = _direction;
 }

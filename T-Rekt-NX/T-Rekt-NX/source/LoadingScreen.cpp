@@ -28,7 +28,6 @@ LoadingScreen::LoadingScreen(SceneManager::SCENES  _nextScene, Settings * settin
 	this->m_lastTime = 0;
 	this->m_currentTime = 0;
 	this->m_delay = 0;
-	this->m_changeScene = false;
 }
 
 LoadingScreen::~LoadingScreen()

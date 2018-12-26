@@ -21,13 +21,15 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 #include "Filepaths.h"
 #include "Settings.hpp"
 
-Sprite::Sprite(int _x, int _y, SDL_Helper * _helper, char * _sprite, int _numFramesX, int _numFramesY, int _sizePerFrameX, int _sizePerFrameY, int _currentFrameX, int _currentFrameY, bool _multipleFrames, bool _animated, bool _drawOpacity)
+Sprite::Sprite(int _x, int _y, SDL_Helper * _helper, char * _sprite, int _numFramesX, int _numFramesY, int _sizePerFrameX, int _sizePerFrameY, int _currentFrameX, int _currentFrameY, bool _multipleFrames, bool _animated, bool _drawOpacity, int _ox, int _oy)
 {
 	this->m_opacity = 255;
 	this->m_active = true;
 	this->m_updateYFrame = false;
 	this->m_x = _x;
 	this->m_y = _y;
+	this->m_ox = _ox;
+	this->m_oy = _oy;
 	this->m_animated = _animated;
 	this->m_sizePerFrameX = _sizePerFrameX;
 	this->m_sizePerFrameY = _sizePerFrameY;
@@ -48,14 +50,14 @@ void Sprite::Draw(SDL_Helper * _helper)
 		if (this->m_drawOpacity)
 		{
 			if (this->m_multipleFrames)
-				_helper->SDL_DrawImageRectOpacity(this->m_sprite, this->m_x, this->m_y, this->m_currentFrameX * this->m_sizePerFrameX, this->m_currentFrameY * this->m_sizePerFrameY, this->m_sizePerFrameX, this->m_sizePerFrameY, this->m_opacity);
+				_helper->SDL_DrawImageRectOpacity(this->m_sprite, this->m_x, this->m_y, this->m_currentFrameX * this->m_sizePerFrameX + this->m_ox, this->m_currentFrameY * this->m_sizePerFrameY + this->m_oy, this->m_sizePerFrameX, this->m_sizePerFrameY, this->m_opacity);
 			else
 				_helper->SDL_DrawImageOpacity(this->m_sprite, this->m_x, this->m_y, this->m_opacity);
 		}
 		else
 		{
 			if (this->m_multipleFrames)
-				_helper->SDL_DrawImageRect(this->m_sprite, this->m_x, this->m_y, this->m_currentFrameX * this->m_sizePerFrameX, this->m_currentFrameY * this->m_sizePerFrameY, this->m_sizePerFrameX, this->m_sizePerFrameY);
+				_helper->SDL_DrawImageRect(this->m_sprite, this->m_x, this->m_y, this->m_currentFrameX * this->m_sizePerFrameX + this->m_ox, this->m_currentFrameY * this->m_sizePerFrameY + this->m_oy, this->m_sizePerFrameX, this->m_sizePerFrameY);
 			else
 				_helper->SDL_DrawImage(this->m_sprite, this->m_x, this->m_y);
 		}
@@ -96,12 +98,18 @@ void Sprite::MoveToCoord(int _x, int _y)
 
 void Sprite::MoveX(int _value)
 {
+	if (!this->m_active)
+		return;
+
 	if ((_value > 0 && this->m_x + _value <= SWITCH_SCREEN_WIDTH-this->m_sizePerFrameX) || (_value < 0 && this->m_x + _value >= 0))
 		this->m_x += _value;
 }
 
 void Sprite::MoveY(int _value)
 {
+	if (!this->m_active)
+		return;
+
 	if ((_value > 0 && this->m_y + _value <= SWITCH_SCREEN_HEIGHT - this->m_sizePerFrameY) || (_value < 0 && this->m_y + _value >= 0))
 		this->m_y += _value;
 }

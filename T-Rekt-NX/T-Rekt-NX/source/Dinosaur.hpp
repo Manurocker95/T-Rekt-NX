@@ -28,10 +28,10 @@ class Dinosaur : public Sprite
 public:
 	enum DINOSAUR_STATE 
 	{ 
-		YOUNG, 
-		ADULT, 
-		ELDER,
-		EGG
+		YOUNG = 0, 
+		ADULT = 1, 
+		ELDER = 2,
+		EGG = 3
 	};
 
 	enum DIRECTION
@@ -41,30 +41,29 @@ public:
 	};
 
 private:
-
+	SDL_Texture * m_walkingSprite;
 	DINOSAUR_STATE m_state;
 	DIRECTION m_currentDirection;
-	int m_originalX;
-	int m_originalY;
 	int m_age;
 	int m_movement;
-	bool m_male;
-	bool m_invincible;		
+	bool m_male;	
 	bool m_alive;
-
+	bool m_moving;
+	bool m_goToIdle;
 public:
 
-	Dinosaur(int _x, int _y, SDL_Helper * _helper, char * _sprite, bool _multipleFrames, int _numFramesX, int _numFramesY, int _sizePerFrameX, int _sizePerFrameY, bool _male);
+	Dinosaur(int _x, int _y, SDL_Helper * _helper, char * _sprite, char * _walkingSprite, bool _multipleFrames, int _numFramesX, int _numFramesY, int _sizePerFrameX, int _sizePerFrameY, bool _male);
 	~Dinosaur();
 
 	void MoveX(int _value) override;
 
+	void Draw(SDL_Helper * _helper) override;
+	void Update() override;
 	void End(SDL_Helper * _helper) override;
 
 	DINOSAUR_STATE GetState();
 	void SetState(DINOSAUR_STATE _value);
 
-	void SetInvincible(bool value);
 	bool GetInvincible();
 
 	bool IsAlive();
@@ -73,11 +72,12 @@ public:
 	bool IsElder();
 	bool IsEgg();
 
-	void Reset();
 	void Die();
 	bool IsMale();
 	bool CanProcreate();
 	void Hatch(int _x);
+	void SetAlive(bool _value);
+	void SetDirection(DIRECTION _direction);
 };
 
 #endif

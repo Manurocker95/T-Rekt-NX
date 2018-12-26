@@ -45,6 +45,7 @@ public:
 		this->m_debugMode = _settings->m_debugMode;
 		this->m_muted = _settings->m_muted;
 		this->m_paused = _settings->m_paused;
+		this->m_changeScene = false;
 	};		
 
 	~Scene() { };														// Destructor

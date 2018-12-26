@@ -34,7 +34,7 @@ private:
 	SDL_Texture * m_spriteOff;
 
 public:
-	Toggle(int _x, int _y, SDL_Helper * _helper, char * _sprite, char * _offSprite, bool _interactable, bool _animated, int _numFramesX, int _numFramesY, int _sizePerFrameX, int _sizePerFrameY, int _multipleFrames, int _currentFrameX, int _currentFrameY);
+	Toggle(bool _defaultValue, int _x, int _y, SDL_Helper * _helper, char * _sprite, char * _offSprite, bool _interactable, bool _animated, int _numFramesX, int _numFramesY, int _sizePerFrameX, int _sizePerFrameY, int _multipleFrames, int _currentFrameX, int _currentFrameY);
 
 	// Sprite methods
 	void Draw(SDL_Helper * _helper) override;

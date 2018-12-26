@@ -37,6 +37,7 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 // Backgrounds
 #define IMG_BACKGROUND "romfs:/Assets/Graphics/Background.png"
 #define IMG_BACKGROUND_TITLE "romfs:/Assets/Graphics/BackgroundTitle.png"
+#define IMG_PAUSED "romfs:/Assets/Graphics/imgPause.png"
 
 //Splash Screen
 #define IMG_SPLASHSCREEN "romfs:/Assets/Graphics/Splash.png"
@@ -69,9 +70,12 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 // Logo
 #define IMG_LOGO "romfs:/Assets/Graphics/Logo.png"
 
-// Sprites
+// IDLE
 #define IMG_DINO_SPRITE "romfs:/Assets/Graphics/dinoMale.png"
 #define IMG_DINO_SPRITE_F "romfs:/Assets/Graphics/dinoMale.png"
+//WALKING
+#define IMG_DINO_SPRITE_WALKING "romfs:/Assets/Graphics/dinoMaleWalking.png"
+#define IMG_DINO_SPRITE_F_WALKING "romfs:/Assets/Graphics/dinoMaleWalking.png"
 
 /* Fonts */
 #define FONT_NORMAL "romfs:/Assets/Fonts/normal.ttf"

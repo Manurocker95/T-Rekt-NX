@@ -35,9 +35,12 @@ private:
 
 	Text * m_scoreText;
 	Text * m_roundsText;
-	
+	//Images
 	Sprite * m_background;
+	Sprite * m_pauseBG;
+	//Dinosaurs
 	std::vector < Dinosaur * > m_dinosaurs;
+	std::vector < Dinosaur * > m_aliveDinosaurs;
 
 	MusicSound * m_gameBGM;
 	SfxSound * m_tapSFX;
@@ -46,7 +49,6 @@ private:
 	bool m_dragging;
 	bool m_maleAlive;
 	bool m_femaleAlive;
-	int m_dinosAlive;
 	int m_score;
 	int m_spawned;
 	int m_maxSpawn;

@@ -27,8 +27,6 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 
 GameScreen::GameScreen(Settings * settings) : Scene(settings)
 {
-	this->m_changeScene = false;
-	this->m_muted = false;
 	this->m_dragging = false;
 	this->m_score = 0;
 	this->m_speedMultiplier = 1.f;
@@ -46,6 +44,9 @@ GameScreen::~GameScreen()
 {
 	this->m_background->End(this->m_helper);
 	delete(this->m_background);
+		
+	this->m_pauseBG->End(this->m_helper);
+	delete(this->m_pauseBG);
 
 	this->m_gameBGM->End(this->m_helper);
 	delete(this->m_gameBGM);
@@ -59,11 +60,14 @@ GameScreen::~GameScreen()
 	this->m_roundsText->End(this->m_helper);
 	delete(this->m_roundsText);
 
+	this->m_aliveDinosaurs.clear();
+
 	for (const auto & dino : this->m_dinosaurs)
 	{
 		dino->End(this->m_helper);
 		delete(dino);
 	}
+	this->m_dinosaurs.clear();
 }
 
 void GameScreen::Start(SDL_Helper * helper)
@@ -72,6 +76,7 @@ void GameScreen::Start(SDL_Helper * helper)
 	this->m_scoreText = new Text(helper, "Score: 0", 525, 20, 15, true, FONT_NORMAL, BLACK);
 	this->m_roundsText = new Text(helper, "Rounds: 0", 155, 20, 15, true, FONT_NORMAL, BLACK);
 	this->m_background = new Sprite(0, 0, helper, IMG_BACKGROUND, 2, 4, SWITCH_SCREEN_WIDTH, SWITCH_SCREEN_HEIGHT, 0, 0, true, true, false);
+	this->m_pauseBG = new Sprite(0, 0, helper, IMG_PAUSED, 2, 4, SWITCH_SCREEN_WIDTH, SWITCH_SCREEN_HEIGHT, 0, 0, true, true, false);
 	this->m_gameBGM = new MusicSound(this->m_helper, SND_BGM_GAME, true, 1);
 	this->m_tapSFX = new SfxSound(this->m_helper, SND_SFX_TAP, false, 2);
 	this->m_gameBGM->Play(this->m_helper);
@@ -79,38 +84,30 @@ void GameScreen::Start(SDL_Helper * helper)
 	if (this->m_muted)
 		this->m_helper->SDL_PauseMusic();
 
-	this->m_dinosaurs.reserve(MAXNUMBEROFDINOS);
-	
+	// allocate vector
+	this->m_dinosaurs.reserve(MAX_NUMBER_OF_DINOS);
+	Dinosaur * dino;
 	int m_space = 0;
-	//140x140
-	for (int i = 0; i < MAXNUMBEROFDINOS; i++)
+	//144x144 
+	for (int i = 0; i < MAX_NUMBER_OF_DINOS; i++)
 	{
-		u16 gender = rand() % 100;
+		int gender = rand() % 100;
 
-		if (i < MAXNUMBEROFDINOS / 2)
-		{
-			if (gender % 2 == 0)
-			{
-				m_dinosaurs.push_back(new Dinosaur(DINO_MIN_POS_X + m_space, FLOOR_POS - 140, helper, IMG_DINO_SPRITE, false, 5, 1, 80, 140, true));
-			}
-			else
-			{
-				m_dinosaurs.push_back(new Dinosaur(DINO_MIN_POS_X + m_space, FLOOR_POS - 140, helper, IMG_DINO_SPRITE_F, false, 5, 1, 80, 140, false));
-			}
-		}
+		if (i < MAX_NUMBER_OF_DINOS / 2)
+			dino = (gender % 2 == 0) ? new Dinosaur(DINO_MIN_POS_X + m_space, FLOOR_POS - 144, helper, IMG_DINO_SPRITE, IMG_DINO_SPRITE_WALKING, true, 4, 1, 144, 144, true) : new Dinosaur(DINO_MIN_POS_X + m_space, FLOOR_POS - 144, helper, IMG_DINO_SPRITE_F, IMG_DINO_SPRITE_F_WALKING, true, 4, 1, 144, 144, false);
 		else
-		{
-			if (gender % 4 == 0)
-			{
-				m_dinosaurs.push_back(new Dinosaur(DINO_MIN_POS_X + m_space, FLOOR_POS - 140, helper, IMG_DINO_SPRITE, false, 5, 1, 80, 140, true));
-			}
-			else
-			{
-				m_dinosaurs.push_back(new Dinosaur(DINO_MIN_POS_X + m_space, FLOOR_POS - 140, helper, IMG_DINO_SPRITE_F, false, 5, 1, 80, 140, false));
-			}
-		}
+			dino = (gender % 4 == 0) ? new Dinosaur(DINO_MIN_POS_X + m_space, FLOOR_POS - 144, helper, IMG_DINO_SPRITE, IMG_DINO_SPRITE_WALKING, true, 4, 1, 144, 144, true) : new Dinosaur(DINO_MIN_POS_X + m_space, FLOOR_POS - 144, helper, IMG_DINO_SPRITE_F, IMG_DINO_SPRITE_F_WALKING, true, 4, 1, 144, 144, false);
 
-		m_space += PIXELSBETWEENDINOS;
+		this->m_dinosaurs.push_back(dino);
+		m_space += PIXELS_BETWEEN_DINOS;
+
+	}
+
+	this->m_aliveDinosaurs.reserve(MAX_NUMBER_OF_DINOS);
+	for (int j = 0; j < STARTING_DINOSAURS; j++)
+	{
+		this->m_dinosaurs[j]->SetActive(true);
+		this->m_aliveDinosaurs.push_back(this->m_dinosaurs[j]);
 	}
 }
 
@@ -123,14 +120,16 @@ void GameScreen::Draw()
 {
 	this->m_background->Draw(this->m_helper);
 
-
-	for (const auto & dino : this->m_dinosaurs)
+	for (const auto & dino : this->m_aliveDinosaurs)
 	{
 		dino->Draw(this->m_helper);
 	}
 
 	this->m_scoreText->Draw(this->m_helper);
 	this->m_roundsText->Draw(this->m_helper);
+
+	if (this->m_paused)
+		this->m_pauseBG->Draw(this->m_helper);
 }
 
 void GameScreen::Update()
@@ -139,7 +138,7 @@ void GameScreen::Update()
 	{
 		this->m_background->Update();
 
-		for (const auto & dino : this->m_dinosaurs)
+		for (const auto & dino : this->m_aliveDinosaurs)
 		{
 			dino->Update();
 		}
@@ -175,7 +174,7 @@ void GameScreen::CheckInputs(u64 kDown, u64 kHeld, u64 kUp)
 	{
 		if (kHeld & KEY_RIGHT)
 		{
-			for (const auto & dino : this->m_dinosaurs)
+			for (const auto & dino : this->m_aliveDinosaurs)
 			{
 				if (dino->IsActive())
 					dino->MoveX(1);
@@ -183,11 +182,18 @@ void GameScreen::CheckInputs(u64 kDown, u64 kHeld, u64 kUp)
 		}
 		else if (kHeld & KEY_LEFT)
 		{
-			for (const auto & dino : this->m_dinosaurs)
+			for (const auto & dino : this->m_aliveDinosaurs)
 			{
 				if (dino->IsActive())
 					dino->MoveX(-1);
 			}
+		}
+	}
+	else
+	{
+		if (kDown & KEY_B)
+		{
+			this->m_paused = false;
 		}
 	}
 
@@ -258,7 +264,7 @@ void GameScreen::Procreate()
 				dino->Hatch(_x);
 				++dinoCount;
 				this->m_score += SCORE_TO_ADD_WHEN_PROCREATE;
-				++this->m_dinosAlive;
+				this->m_aliveDinosaurs.push_back(dino);
 			}
 		}
 

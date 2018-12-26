@@ -19,12 +19,13 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 
 #include "Toggle.hpp"
 
-Toggle::Toggle(int _x, int _y, SDL_Helper * _helper, char * _sprite, char * _offSprite, bool _interactable, bool _animated, int _numFramesX, int _numFramesY, int _sizePerFrameX, int _sizePerFrameY, int _multipleFrames, int _currentFrameX, int _currentFrameY) : Sprite(_x, _y, _helper, _sprite, _numFramesX, _numFramesY, _sizePerFrameX, _sizePerFrameY, _currentFrameX, _currentFrameY, _multipleFrames, _animated)
+Toggle::Toggle(bool _defaultValue, int _x, int _y, SDL_Helper * _helper, char * _sprite, char * _offSprite, bool _interactable, bool _animated, int _numFramesX, int _numFramesY, int _sizePerFrameX, int _sizePerFrameY, int _multipleFrames, int _currentFrameX, int _currentFrameY) : Sprite(_x, _y, _helper, _sprite, _numFramesX, _numFramesY, _sizePerFrameX, _sizePerFrameY, _currentFrameX, _currentFrameY, _multipleFrames, _animated)
 {
 	_helper->SDL_LoadImage(&this->m_spriteOff, _offSprite);
 	this->m_valueChanged = false;
 	this->m_interactable = _interactable;
 	this->m_isPressed = false;
+	this->m_isOn = _defaultValue;
 }
 
 void Toggle::Draw(SDL_Helper * _helper)
