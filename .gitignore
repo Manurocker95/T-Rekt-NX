@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+# Folders
+T-Rekt-NX/[Dd]ebug
+T-Rekt-NX/[Vv]s
+T-Rekt-NX/.[Vv]s
+T-Rekt-NX/T-Rekt-NX/[Bb]uild
+T-Rekt-NX/T-Rekt-NX/[Oo]ut
+T-Rekt-NX/T-Rekt-NX/[Dd]ebug
