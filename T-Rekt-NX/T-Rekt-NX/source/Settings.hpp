@@ -49,17 +49,17 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 #define PIXELS_BETWEEN_DINOS 240
 
 //Ages Male
-#define AGE_TO_BE_ADULT_MALE 4000
-#define AGE_TO_BE_OLD_MALE 9000
-#define AGE_TO_DIE_MALE 10000
+#define AGE_TO_BE_ADULT_MALE 40
+#define AGE_TO_BE_OLD_MALE 90
+#define AGE_TO_DIE_MALE 100
 
 //Ages Female
-#define AGE_TO_BE_ADULT_FEMALE 4000
-#define AGE_TO_BE_OLD_FEMALE 9000
-#define AGE_TO_DIE_FEMALE 10000
+#define AGE_TO_BE_ADULT_FEMALE 20
+#define AGE_TO_BE_OLD_FEMALE 90
+#define AGE_TO_DIE_FEMALE 100
 
 //Ages to have babys... If you know what I mean
-#define AGE_FOR_SEX 2500
+#define AGE_FOR_SEX 30
 
 //Meteorite settings
 #define NUMBER_OF_METEOS 10
@@ -67,7 +67,10 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 #define METEORITE_SCORE 1
 
 #define DINO_MIN_POS_X 100
-#define FLOOR_POS 668
+#define FLOOR_POS 720
+
+#define TIME_TO_START 4
+#define FRAMES_PER_YEAR 10000
 
 class Settings
 {

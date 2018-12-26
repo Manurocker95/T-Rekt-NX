@@ -70,7 +70,7 @@ void TitleScreen::Start(SDL_Helper * helper)
 	this->m_settingsButton = new Button(390, 450, this->m_helper, IMG_BTN_SETTINGS, IMG_BTN_SETTINGS_NON_INTERACTABLE, IMG_BTN_SETTINGS_PRESSED, true, false, 1, 1, 508, 110, false, 0, 0);
 	this->m_backButton = new Button(60, 560, this->m_helper, IMG_BTN_BACK, IMG_BTN_BACK_NON_INTERACTABLE, IMG_BTN_BACK_PRESSED, true, false, 1, 1, 100, 100, false, 0, 0);
 
-	this->m_muteToggle = new Toggle(false, 350, 380, this->m_helper, IMG_TOGGLE_MUTE_ON, IMG_TOGGLE_MUTE_OFF, true, false, 1, 1, 516, 112, false, 0, 0);
+	this->m_muteToggle = new Toggle(this->m_muted, 350, 380, this->m_helper, IMG_TOGGLE_MUTE_ON, IMG_TOGGLE_MUTE_OFF, true, false, 1, 1, 516, 112, false, 0, 0);
 
 	this->m_buttonTapSFX = new SfxSound(this->m_helper, SND_SFX_TAP, false, 2);
 	this->m_music = new MusicSound(this->m_helper, SND_BGM_TITLE, true, 1);

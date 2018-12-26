@@ -51,6 +51,14 @@ public:
 	bool IsActive();
 	void SetActive(bool _value);
 
+	int GetX();
+	void SetX(int _value);
+	int GetY();
+	void SetY(int _value);
+
+	void MoveX(int _value);
+	void MoveY(int _value);
+	void MoveToCoord(int _x, int _y);
 };
 
 #endif

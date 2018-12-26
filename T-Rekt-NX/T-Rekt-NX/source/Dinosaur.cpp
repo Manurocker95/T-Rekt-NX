@@ -150,6 +150,7 @@ bool Dinosaur::IsEgg()
 void Dinosaur::Die()
 {
 	this->m_alive = false;
+	this->m_active = false;
 }
 
 bool Dinosaur::IsMale()
@@ -169,9 +170,11 @@ bool Dinosaur::CanProcreate()
 
 void Dinosaur::Hatch(int _x)
 {
+	this->m_age = 0;
 	this->m_x = _x;
 	this->m_active = true;
-	this->m_state = Dinosaur::DINOSAUR_STATE::EGG;
+	this->m_alive = true;
+	SetState(Dinosaur::DINOSAUR_STATE::EGG);
 	this->m_currentDirection = Dinosaur::DIRECTION::LEFT;
 	this->m_movement = (rand() % (DINOSAUR_MOVEMENT - 1)) + 1;
 }
@@ -187,10 +190,37 @@ void Dinosaur::MoveX(int _value)
 			SetDirection(Dinosaur::DIRECTION::LEFT);
 		else
 			SetDirection(Dinosaur::DIRECTION::RIGHT);
+
+		if (this->m_x + this->m_ox > SWITCH_SCREEN_WIDTH)
+			this->m_x = -this->m_sizePerFrameX;
+		else if (this->m_x < -this->m_sizePerFrameX)
+			this->m_x = SWITCH_SCREEN_WIDTH;
 	}
 }
 
 void  Dinosaur::SetDirection(Dinosaur::DIRECTION _direction)
 {
 	this->m_currentDirection = _direction;
+}
+
+void Dinosaur::YearPassed()
+{
+	this->m_age++;
+
+	if (this->m_age == 1)
+	{
+		SetState(Dinosaur::DINOSAUR_STATE::YOUNG);
+	}
+	else if ((this->m_male && this->m_age == AGE_TO_BE_ADULT_MALE) || (!this->m_male && this->m_age == AGE_TO_BE_ADULT_FEMALE))
+	{
+		SetState(Dinosaur::DINOSAUR_STATE::ADULT);
+	}
+	else if ((this->m_male && this->m_age == AGE_TO_BE_OLD_MALE) || (!this->m_male && this->m_age == AGE_TO_BE_OLD_FEMALE))
+	{
+		SetState(Dinosaur::DINOSAUR_STATE::ELDER);
+	}
+	else if ((this->m_male && this->m_age >= AGE_TO_DIE_MALE) || (!this->m_male && this->m_age >= AGE_TO_DIE_FEMALE))
+	{
+		Die();
+	}
 }

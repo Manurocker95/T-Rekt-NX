@@ -63,9 +63,20 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 #define IMG_BTN_BACK_PRESSED "romfs:/Assets/Graphics/backPressed.png" 
 #define IMG_BTN_BACK_NON_INTERACTABLE "romfs:/Assets/Graphics/backNotInteractable.png" 
 
+#define IMG_BTN_PAUSE "romfs:/Assets/Graphics/pause.png" 
+#define IMG_BTN_PAUSE_PRESSED "romfs:/Assets/Graphics/pausePressed.png" 
+#define IMG_BTN_PAUSE_NON_INTERACTABLE "romfs:/Assets/Graphics/pauseNotInteractable.png"
+
+#define IMG_BTN_EXIT "romfs:/Assets/Graphics/exit.png" 
+#define IMG_BTN_EXIT_PRESSED "romfs:/Assets/Graphics/exitPressed.png" 
+#define IMG_BTN_EXIT_NON_INTERACTABLE "romfs:/Assets/Graphics/exitNotInteractable.png" 
+
 // Toggles
 #define IMG_TOGGLE_MUTE_ON "romfs:/Assets/Graphics/mute_on.png" 
 #define IMG_TOGGLE_MUTE_OFF "romfs:/Assets/Graphics/mute_off.png" 
+
+#define IMG_TOGGLE_INGAME_MUTE_ON "romfs:/Assets/Graphics/nosound.png" 
+#define IMG_TOGGLE_INGAME_MUTE_OFF "romfs:/Assets/Graphics/sound.png" 
 
 // Logo
 #define IMG_LOGO "romfs:/Assets/Graphics/Logo.png"

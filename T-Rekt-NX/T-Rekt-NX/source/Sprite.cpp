@@ -158,9 +158,14 @@ void Sprite::SetNumFrames(int _value)
 	this->m_currentFrameX = 0;
 }
 
-int Sprite::GetNumFrames()
+int Sprite::GetNumFramesX()
 {
 	return this->m_numFramesX;
+}
+
+int Sprite::GetNumFramesY()
+{
+	return this->m_numFramesY;
 }
 
 void Sprite::SetFrameSize(int _value, bool _xAxis)
@@ -204,4 +209,15 @@ void Sprite::SetOpacity(int _value)
 void Sprite::SetOpacityMode(bool _value)
 {
 	this->m_drawOpacity = _value;
+}
+
+bool Sprite::CheckCollision(Sprite * _other)
+{
+	int x = _other->GetX();
+	int y = _other->GetY();
+	int width = _other->GetFrameSize(true);
+	int height = _other->GetFrameSize(false);
+
+	return (((x > this->m_x && x < this->m_x + this->m_sizePerFrameX) && (y > this->m_y && y < this->m_y + this->m_sizePerFrameY)) 
+		|| ((this->m_x > x && this->m_x < x + width) && (this->m_y > y && this->m_y < y + height)));
 }

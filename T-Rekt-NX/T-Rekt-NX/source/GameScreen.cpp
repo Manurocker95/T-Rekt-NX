@@ -27,13 +27,21 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 
 GameScreen::GameScreen(Settings * settings) : Scene(settings)
 {
+	settings->SetMute(false);
+	this->m_paused = false;
+	this->m_startGame = false;
 	this->m_dragging = false;
+	this->m_updateYear = false;
+	this->m_timeToProcreate = 0;
 	this->m_score = 0;
 	this->m_speedMultiplier = 1.f;
 	this->m_spawned = 0;
 	this->m_solved = 0;
 	this->m_maxSpawn = 1;
 	this->m_rounds = 1;
+	this->m_timeToStart = 0;
+	this->m_timeToSpawn = 0;
+	this->m_lastTime = 0;
 	this->m_currentTime = SDL_GetTicks();
 	srand(time(NULL));
 
@@ -43,7 +51,10 @@ GameScreen::GameScreen(Settings * settings) : Scene(settings)
 GameScreen::~GameScreen()
 {
 	this->m_background->End(this->m_helper);
-	delete(this->m_background);
+	delete(this->m_background);	
+	
+	this->m_muteToggle->End(this->m_helper);
+	delete(this->m_muteToggle);
 		
 	this->m_pauseBG->End(this->m_helper);
 	delete(this->m_pauseBG);
@@ -58,7 +69,16 @@ GameScreen::~GameScreen()
 	delete(this->m_scoreText);	
 	
 	this->m_roundsText->End(this->m_helper);
-	delete(this->m_roundsText);
+	delete(this->m_roundsText);	
+	
+	this->m_pauseBtn->End(this->m_helper);
+	delete(this->m_pauseBtn);	
+	
+	this->m_exitBtn->End(this->m_helper);
+	delete(this->m_exitBtn);
+	
+	this->m_debugText->End(this->m_helper);
+	delete(this->m_debugText);
 
 	this->m_aliveDinosaurs.clear();
 
@@ -75,14 +95,22 @@ void GameScreen::Start(SDL_Helper * helper)
 	this->m_helper = helper;
 	this->m_scoreText = new Text(helper, "Score: 0", 525, 20, 15, true, FONT_NORMAL, BLACK);
 	this->m_roundsText = new Text(helper, "Rounds: 0", 155, 20, 15, true, FONT_NORMAL, BLACK);
+	this->m_infoText = new Text(helper, "", 455, 420, 125, true, FONT_NORMAL, BLUE);
+	this->m_debugText = new Text(helper, "DEBUG MODE ON", 455, 680, 25, true, FONT_NORMAL, BLUE);
 	this->m_background = new Sprite(0, 0, helper, IMG_BACKGROUND, 2, 4, SWITCH_SCREEN_WIDTH, SWITCH_SCREEN_HEIGHT, 0, 0, true, true, false);
 	this->m_pauseBG = new Sprite(0, 0, helper, IMG_PAUSED, 2, 4, SWITCH_SCREEN_WIDTH, SWITCH_SCREEN_HEIGHT, 0, 0, true, true, false);
-	this->m_gameBGM = new MusicSound(this->m_helper, SND_BGM_GAME, true, 1);
-	this->m_tapSFX = new SfxSound(this->m_helper, SND_SFX_TAP, false, 2);
-	this->m_gameBGM->Play(this->m_helper);
+	this->m_gameBGM = new MusicSound(helper, SND_BGM_GAME, true, 1);
+	this->m_tapSFX = new SfxSound(helper, SND_SFX_TAP, false, 2);
+	this->m_gameBGM->Play(helper);
 	
+	this->m_exitBtn = new Button(30, 60, helper, IMG_BTN_EXIT, IMG_BTN_EXIT_NON_INTERACTABLE, IMG_BTN_EXIT_PRESSED, true, false, 1, 1, 74, 74, false, 0, 0);
+	this->m_pauseBtn = new Button(1000, 60, helper, IMG_BTN_PAUSE, IMG_BTN_PAUSE_NON_INTERACTABLE, IMG_BTN_PAUSE_PRESSED, true, false, 1, 1, 74, 74, false, 0, 0);
+	this->m_pauseBtn->SetInteractable(false);
+
+	this->m_muteToggle = new Toggle(this->m_muted, 1110, 60, helper, IMG_TOGGLE_INGAME_MUTE_ON, IMG_TOGGLE_INGAME_MUTE_OFF, true, false, 1, 1, 74, 74, false, 0, 0);
+
 	if (this->m_muted)
-		this->m_helper->SDL_PauseMusic();
+		helper->SDL_PauseMusic();
 
 	// allocate vector
 	this->m_dinosaurs.reserve(MAX_NUMBER_OF_DINOS);
@@ -128,8 +156,18 @@ void GameScreen::Draw()
 	this->m_scoreText->Draw(this->m_helper);
 	this->m_roundsText->Draw(this->m_helper);
 
+	if (!this->m_startGame)
+		this->m_infoText->Draw(this->m_helper);
+
 	if (this->m_paused)
 		this->m_pauseBG->Draw(this->m_helper);
+
+	this->m_muteToggle->Draw(this->m_helper);
+	this->m_pauseBtn->Draw(this->m_helper);
+	this->m_exitBtn->Draw(this->m_helper);
+
+	if (this->m_debugMode)
+		this->m_debugText->Draw(this->m_helper);
 }
 
 void GameScreen::Update()
@@ -138,23 +176,65 @@ void GameScreen::Update()
 	{
 		this->m_background->Update();
 
-		for (const auto & dino : this->m_aliveDinosaurs)
-		{
-			dino->Update();
-		}
+		this->m_currentTime = SDL_GetTicks();
 
-		if (m_spawned > 0 && m_solved > 0)
+		if (this->m_currentTime > this->m_lastTime + 1000) 
 		{
-
-		}
-		else
-		{
-			this->m_currentTime = SDL_GetTicks();
-
-			if (this->m_currentTime >= this->m_timeToSpawn + this->m_lastTime)
+			this->m_lastTime = this->m_currentTime;
+			
+			if (!this->m_startGame)
 			{
-				this->m_lastTime = this->m_currentTime;
-				Spawn();
+				++this->m_timeToStart;
+
+				if (this->m_timeToStart >= TIME_TO_START)
+				{
+					this->m_startGame = true;
+					this->m_pauseBtn->SetInteractable(true);
+				}
+			}	
+			else
+			{
+				++this->m_timeToProcreate;
+				if (this->m_timeToProcreate >= AGE_FOR_SEX)
+					Procreate();
+			}
+		}
+
+		this->m_updateYear = (this->m_currentTime >  this->m_lastTime + FRAMES_PER_YEAR) ? true : false;
+
+		for (int i = 0; i < this->m_aliveDinosaurs.size(); i++)
+		{
+			if (this->m_updateYear)
+			{
+				this->m_aliveDinosaurs.at(i)->YearPassed();
+				// if has died
+				if (!this->m_aliveDinosaurs.at(i)->IsAlive())
+				{
+					this->m_aliveDinosaurs.erase(this->m_aliveDinosaurs.begin() + i);
+					continue;
+				}
+			}
+
+			this->m_aliveDinosaurs.at(i)->Update();
+			
+		}
+
+		if (!this->m_startGame)
+		{
+			switch (this->m_timeToStart)
+			{
+			case 1:
+				this->m_infoText->SetText("Avoid the meteorites");
+				this->m_infoText->MoveToCoord(55, 300);
+				break;
+			case 2:
+				this->m_infoText->SetText("Ready??");
+				this->m_infoText->SetX(455);
+				break;
+			case 3:
+				this->m_infoText->SetText("Go!!!!!");
+				this->m_infoText->SetX(455);
+				break;
 			}
 		}
 	}
@@ -165,11 +245,59 @@ void GameScreen::Update()
 
 void GameScreen::CheckInputs(u64 kDown, u64 kHeld, u64 kUp)
 {
+	if (kDown & KEY_R)
+	{
+		this->m_debugMode = !m_debugMode;
+	}
+
 	if (kDown & KEY_MINUS)
 	{
 		this->m_paused = !m_paused;
 	}
+	
+	if (kHeld & KEY_TOUCH)
+	{
+		u32 j;
+		hidTouchRead(&touch, j);
+
+		this->m_pauseBtn->IsPressed(&touch);
+		this->m_exitBtn->IsPressed(&touch);
+	}
+	else if (kUp & KEY_TOUCH)
+	{
+		this->m_muteToggle->CheckIsPressed(&touch);
+
+		if (this->m_pauseBtn->GetPressed())
+		{
+			this->m_paused = !this->m_paused;
+			this->m_pauseBtn->SetPressed(false);
+			return;
+		}		
 		
+		if (this->m_exitBtn->GetPressed())
+		{
+			this->m_pauseBtn->SetPressed(false);
+			EndGame();
+			return;
+		}
+
+		if (this->m_muteToggle->ValueChanged())
+		{
+			this->m_muteToggle->ResetChangeValue();
+			Mute();
+			return;
+		}
+	}
+
+	if (kDown & KEY_PLUS)
+	{
+		EndGame();
+		return;
+	}
+		
+	if (!this->m_startGame)
+		return;
+
 	if (!this->m_paused)
 	{
 		if (kHeld & KEY_RIGHT)
@@ -196,9 +324,6 @@ void GameScreen::CheckInputs(u64 kDown, u64 kHeld, u64 kUp)
 			this->m_paused = false;
 		}
 	}
-
-	if (kDown & KEY_PLUS)
-		EndGame();
 }
 
 // * We go to the next scene = GameScreen
@@ -217,14 +342,13 @@ void GameScreen::AddScore()
 
 void GameScreen::Spawn()
 {
-
-
 	this->m_roundsText->SetText("Rounds: " + std::to_string(this->m_rounds));
 }
 
 
 void GameScreen::Procreate()
 {
+	this->m_timeToProcreate = 0;
 	this->m_femaleAlive = false;
 	this->m_maleAlive = false;
 	int _x = 0;

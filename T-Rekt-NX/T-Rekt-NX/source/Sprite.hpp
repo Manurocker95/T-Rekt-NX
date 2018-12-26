@@ -63,7 +63,8 @@ public:
 	virtual void End(SDL_Helper * _helper);
 
 	virtual void SetNumFrames(int _value);
-	virtual int GetNumFrames();
+	virtual int GetNumFramesX();
+	virtual int GetNumFramesY();
 	virtual void SetFrameSize(int _value, bool _xAxis);
 	virtual int GetFrameSize(bool _xAxis);
 
@@ -73,5 +74,7 @@ public:
 
 	virtual void SetOpacity(int _value);
 	virtual void SetOpacityMode(bool _value);
+
+	virtual bool CheckCollision(Sprite * _other);
 };
 #endif

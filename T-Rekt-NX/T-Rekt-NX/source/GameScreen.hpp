@@ -27,6 +27,8 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 #include "Text.hpp"
 #include "Dinosaur.hpp"
 #include <vector>
+#include "Button.hpp"
+#include "Toggle.hpp"
 
 class GameScreen : public Scene
 {
@@ -35,6 +37,8 @@ private:
 
 	Text * m_scoreText;
 	Text * m_roundsText;
+	Text * m_infoText;
+	Text * m_debugText;
 	//Images
 	Sprite * m_background;
 	Sprite * m_pauseBG;
@@ -45,6 +49,13 @@ private:
 	MusicSound * m_gameBGM;
 	SfxSound * m_tapSFX;
 
+	Button * m_pauseBtn;
+	Button * m_exitBtn;
+	
+	Toggle * m_muteToggle;
+
+	bool m_updateYear;
+	bool m_startGame;
 	bool m_debugMode;
 	bool m_dragging;
 	bool m_maleAlive;
@@ -59,6 +70,8 @@ private:
 	unsigned int m_currentTime;
 	unsigned int m_lastTime;
 	unsigned int m_timeToSpawn;
+	unsigned int m_timeToStart;
+	unsigned int m_timeToProcreate;
 public:
 
 	GameScreen(Settings * settings);							// Constructor

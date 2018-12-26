@@ -78,6 +78,7 @@ public:
 	void Hatch(int _x);
 	void SetAlive(bool _value);
 	void SetDirection(DIRECTION _direction);
+	void YearPassed();
 };
 
 #endif

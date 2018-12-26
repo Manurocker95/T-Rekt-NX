@@ -17,6 +17,7 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 */
 
 #include "Text.hpp"
+#include "Settings.hpp"
 
 Text::Text(SDL_Helper * _helper, std::string _text, int _x, int _y, int _size, bool _customFont, char * _font, SDL_Color _color)
 {
@@ -97,4 +98,47 @@ void Text::SetActive(bool _value)
 void Text::SetColor(SDL_Color _color)
 {
 	this->m_textColor = _color;
+}
+
+
+void Text::MoveToCoord(int _x, int _y)
+{
+	this->m_x = _x;
+	this->m_y = _y;
+}
+
+void Text::MoveX(int _value)
+{
+	if (!this->m_active)
+		return;
+
+	this->m_x += _value;
+}
+
+void Text::MoveY(int _value)
+{
+	if (!this->m_active)
+		return;
+
+	this->m_y += _value;
+}
+
+void Text::SetX(int _value)
+{
+	this->m_x = _value;
+}
+
+int Text::GetX()
+{
+	return this->m_x;
+}
+
+void Text::SetY(int _value)
+{
+	this->m_y = _value;
+}
+
+int Text::GetY()
+{
+	return this->m_y;
 }
