@@ -36,6 +36,7 @@ Dinosaur::Dinosaur(int _x, int _y, SDL_Helper * _helper, char * _sprite, char * 
 	this->m_movement = (rand() % (DINOSAUR_MOVEMENT - 1)) + MIN_DINOSAUR_MOVEMENT;
 	this->m_active = false;
 	this->m_moving = false;
+	this->m_goToIdle = false;
 }
 
 Dinosaur::~Dinosaur()
@@ -70,7 +71,15 @@ void Dinosaur::Update()
 		Uint32 ticks = SDL_GetTicks();
 		this->m_currentFrameX = ((ticks / (100 * DELTA_TIME_REDUCTION)) % this->m_numFramesX);
 
-		this->m_currentFrameX += (this->m_currentDirection * m_numFramesX);		
+		if (!this->m_goToIdle && this->m_currentFrameX > 0 && this->m_state == Dinosaur::DINOSAUR_STATE::EGG)
+		{
+			this->m_goToIdle = true;
+		}
+
+		if (this->m_goToIdle && this->m_currentFrameX == m_numFramesX)
+			SetState(Dinosaur::DINOSAUR_STATE::YOUNG);
+		else
+			this->m_currentFrameX += (this->m_currentDirection * m_numFramesX);
 	}
 }
 
@@ -179,7 +188,6 @@ void Dinosaur::Hatch(int _x)
 	this->m_movement = (rand() % (DINOSAUR_MOVEMENT - 1)) + 1;
 }
 
-
 void Dinosaur::MoveX(int _value)
 {
 	if (this->m_active && this->m_state != Dinosaur::DINOSAUR_STATE::EGG)
@@ -191,10 +199,10 @@ void Dinosaur::MoveX(int _value)
 		else
 			SetDirection(Dinosaur::DIRECTION::RIGHT);
 
-		if (this->m_x + this->m_ox > SWITCH_SCREEN_WIDTH)
-			this->m_x = -this->m_sizePerFrameX;
+		if (this->m_x + this->m_ox > SWITCH_SCREEN_WIDTH + 10)
+			this->m_x = -10;
 		else if (this->m_x < -this->m_sizePerFrameX)
-			this->m_x = SWITCH_SCREEN_WIDTH;
+			this->m_x = SWITCH_SCREEN_WIDTH-10;
 	}
 }
 

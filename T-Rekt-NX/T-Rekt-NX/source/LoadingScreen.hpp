@@ -42,12 +42,12 @@ private:
 	int m_delay;
 public:
 
-	LoadingScreen(SceneManager::SCENES  _nextScene, Settings * settings);			// Constructor
-	~LoadingScreen();																// Destructor
-	void Start(SDL_Helper * helper) override;										// initialize
-	void Draw() override;															// Draw
-	void CheckInputs(u64 kDown, u64 kHeld, u64 kUp) override;						// CheckInput
-	void Update() override;															// Update
+	LoadingScreen(SceneManager::SCENES  _nextScene, Settings * settings, int _delayTime = LOADING_DELAY);		// Constructor
+	~LoadingScreen();																							// Destructor
+	void Start(SDL_Helper * helper) override;																	// initialize
+	void Draw() override;																						// Draw
+	void CheckInputs(u64 kDown, u64 kHeld, u64 kUp) override;													// CheckInput
+	void Update() override;																						// Update
 	void NextScene() override;
 };
 

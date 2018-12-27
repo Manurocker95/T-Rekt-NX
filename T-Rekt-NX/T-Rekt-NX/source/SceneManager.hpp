@@ -33,6 +33,7 @@ public:
 	enum SCENES 
 	{ 
 		SPLASH, 
+		INTRO,
 		TITLE,
 		GAME, 
 		LOADING
@@ -49,7 +50,7 @@ private:
 
 public:
 	static SceneManager * Instance();		// Property to get the singleton instance
-	void LoadScene(SCENES _scene);
+	void LoadScene(SCENES _scene, int _delayTime = LOADING_DELAY);
 	void SetActualScene(SCENES _scene);		// Method to set a new scene (E.G: SplashScreen -> GameScreen)
 	void Start(SDL_Helper * helper);		// Method for initialization
 	void Update();							// Method called every frame. It calls to scene Draw, Update and CheckInput functions

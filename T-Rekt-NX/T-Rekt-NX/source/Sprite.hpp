@@ -42,6 +42,7 @@ protected:
 	bool m_active;
 	bool m_animated;
 	bool m_drawOpacity;
+	bool m_inLoop;
 
 public:
 	Sprite(int _x, int _y, SDL_Helper * _helper, char * _sprite, int _numFramesX, int _numFramesY, int _sizePerFrameX, int _sizePerFrameY, int _currentFrameX, int _currentFrameY, bool _multipleFrames, bool _animated, bool _opacityMode = false, int _ox = 0, int _oy = 0);
@@ -54,6 +55,10 @@ public:
 	virtual void SetX(int _value);
 	virtual int GetY();
 	virtual void SetY(int _value);
+	virtual int GetOX();
+	virtual void SetOX(int _value);
+	virtual int GetOY();
+	virtual void SetOY(int _value);
 
 	virtual SDL_Texture * GetSprite();
 	virtual void SetSprite(SDL_Texture * _sprite);
@@ -71,10 +76,12 @@ public:
 	virtual bool Touched(touchPosition * _touch);
 	virtual bool IsActive();
 	virtual void SetActive(bool _value);
-
+	virtual bool IsLoop();
+	virtual void SetInLoop(bool _value);
+	virtual bool IsAnimated();
 	virtual void SetOpacity(int _value);
 	virtual void SetOpacityMode(bool _value);
 
-	virtual bool CheckCollision(Sprite * _other);
+	virtual bool CheckOverlap(Sprite * _other);
 };
 #endif

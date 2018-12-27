@@ -21,7 +21,7 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 #include "Filepaths.h"
 #include "Colors.h"
 
-LoadingScreen::LoadingScreen(SceneManager::SCENES  _nextScene, Settings * settings) : Scene(settings)
+LoadingScreen::LoadingScreen(SceneManager::SCENES  _nextScene, Settings * settings, int _delayTime) : Scene(settings)
 {
 	this->m_nextScene = _nextScene;
 	this->m_loading = true;

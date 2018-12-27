@@ -103,6 +103,7 @@
     <ClCompile Include="source\Button.cpp" />
     <ClCompile Include="source\Dinosaur.cpp" />
     <ClCompile Include="source\GameScreen.cpp" />
+    <ClCompile Include="source\IntroScreen.cpp" />
     <ClCompile Include="source\LoadingScreen.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Meteorite.cpp" />
@@ -124,6 +125,7 @@
     <ClInclude Include="source\Dinosaur.hpp" />
     <ClInclude Include="source\Filepaths.h" />
     <ClInclude Include="source\GameScreen.hpp" />
+    <ClInclude Include="source\IntroScreen.hpp" />
     <ClInclude Include="source\LoadingScreen.hpp" />
     <ClInclude Include="source\Meteorite.hpp" />
     <ClInclude Include="source\MusicSound.hpp" />

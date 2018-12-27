@@ -220,5 +220,5 @@ void TitleScreen::CheckInputs(u64 kDown, u64 kHeld, u64 kUp)
 // * We go to the next scene = GameScreen
 void TitleScreen::NextScene()
 {
-	SceneManager::Instance()->LoadScene(SceneManager::GAME);
+	SceneManager::Instance()->LoadScene(SceneManager::INTRO);
 }

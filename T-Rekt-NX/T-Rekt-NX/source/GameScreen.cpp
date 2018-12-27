@@ -110,6 +110,7 @@ void GameScreen::Start(SDL_Helper * helper)
 	this->m_pauseBG = new Sprite(0, 0, helper, IMG_PAUSED, 2, 4, SWITCH_SCREEN_WIDTH, SWITCH_SCREEN_HEIGHT, 0, 0, true, true, false);
 	this->m_gameBGM = new MusicSound(helper, SND_BGM_GAME, true, 1);
 	this->m_tapSFX = new SfxSound(helper, SND_SFX_TAP, false, 2);
+	this->m_dinoScream = new SfxSound(helper, SND_SFX_DINO_SCREAM, false, 3);
 	this->m_gameBGM->Play(helper);
 	
 	this->m_exitBtn = new Button(30, 60, helper, IMG_BTN_EXIT, IMG_BTN_EXIT_NON_INTERACTABLE, IMG_BTN_EXIT_PRESSED, true, false, 1, 1, 74, 74, false, 0, 0);
@@ -262,21 +263,25 @@ void GameScreen::Update()
 						if (this->m_aliveDinosaurs.at(k) == NULL)
 							continue;
 
-						this->m_fallingMeteos.at(j)->CheckCollision(this->m_aliveDinosaurs.at(k));
-						this->m_aliveDinosaurs.at(k)->SetAlive(false);
-						this->m_aliveDinosaurs.at(k)->SetActive(false);
-						this->m_aliveDinosaurs.erase(this->m_aliveDinosaurs.begin() + k);
-					}
-					
-				}
-				
-			}
+						if (this->m_fallingMeteos.at(j)->CheckOverlap(this->m_aliveDinosaurs.at(k)))
+						{
+							if (!this->m_muted)
+								this->m_dinoScream->Play(this->m_helper);
 
-			if (m_aliveDinosaurs.size() == 0)
-			{
-				SceneManager::Instance()->SaveData(this->m_score);
-				EndGame();
-				return;
+							this->m_aliveDinosaurs.at(k)->SetAlive(false);
+							this->m_aliveDinosaurs.at(k)->SetActive(false);
+							this->m_aliveDinosaurs.erase(this->m_aliveDinosaurs.begin() + k);
+						}
+					}		
+
+					if (this->m_aliveDinosaurs.size() < 1)
+					{
+						this->m_paused = true;
+						SceneManager::Instance()->SaveData(this->m_score);
+						EndGame();
+						break;
+					}
+				}
 			}
 
 			this->m_updateYear = (this->m_currentTime >  this->m_lastTime + FRAMES_PER_YEAR) ? true : false;
@@ -311,12 +316,12 @@ void GameScreen::CheckInputs(u64 kDown, u64 kHeld, u64 kUp)
 {
 	if (kDown & KEY_R)
 	{
-		this->m_debugMode = !m_debugMode;
+		this->m_debugMode = !this->m_debugMode;
 	}
 
 	if (kDown & KEY_MINUS)
 	{
-		this->m_paused = !m_paused;
+		this->m_paused = !this->m_paused;
 	}
 	
 	if (kHeld & KEY_TOUCH)
@@ -340,7 +345,7 @@ void GameScreen::CheckInputs(u64 kDown, u64 kHeld, u64 kUp)
 		
 		if (this->m_exitBtn->GetPressed())
 		{
-			this->m_pauseBtn->SetPressed(false);
+			this->m_exitBtn->SetPressed(false);
 			EndGame();
 			return;
 		}

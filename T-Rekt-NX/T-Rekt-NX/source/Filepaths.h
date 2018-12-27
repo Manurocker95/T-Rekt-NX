@@ -31,6 +31,8 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 
 //SFX
 #define SND_SFX_TAP "romfs:/Assets/Audio/SFX/tap.wav"
+#define SND_SFX_DINO_SCREAM "romfs:/Assets/Audio/SFX/dinoScream.wav"
+#define SND_SFX_FOOTSTEP "romfs:/Assets/Audio/SFX/footstep.wav"
 #define SND_SFX_SPLASH "romfs:/Assets/Audio/SFX/bbb.wav"
 
 /* Images */
@@ -44,6 +46,9 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 
 // Loading Screen
 #define IMG_BG_LOADING "romfs:/Assets/Graphics/Loading.png" 
+
+// Introduction
+#define IMG_INTRODUCTION "romfs:/Assets/Graphics/intro.png" 
 
 // Buttons
 #define IMG_BTN_PLAY "romfs:/Assets/Graphics/playBtn.png" 
@@ -83,10 +88,10 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 
 // IDLE
 #define IMG_DINO_SPRITE "romfs:/Assets/Graphics/dinoMale.png"
-#define IMG_DINO_SPRITE_F "romfs:/Assets/Graphics/dinoMale.png"
+#define IMG_DINO_SPRITE_F "romfs:/Assets/Graphics/dinoFemale.png"
 //WALKING
 #define IMG_DINO_SPRITE_WALKING "romfs:/Assets/Graphics/dinoMaleWalking.png"
-#define IMG_DINO_SPRITE_F_WALKING "romfs:/Assets/Graphics/dinoMaleWalking.png"
+#define IMG_DINO_SPRITE_F_WALKING "romfs:/Assets/Graphics/dinoFemaleWalking.png"
 
 #define IMG_METEORITE "romfs:/Assets/Graphics/meteorite.png"
 

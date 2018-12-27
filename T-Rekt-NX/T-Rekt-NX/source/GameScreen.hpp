@@ -54,6 +54,9 @@ private:
 	// Music
 	MusicSound * m_gameBGM;
 	SfxSound * m_tapSFX;
+	SfxSound * m_dinoScream;
+
+
 	//BUttons && Toggles
 	Button * m_pauseBtn;
 	Button * m_exitBtn;

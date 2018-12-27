@@ -26,6 +26,7 @@ Sprite::Sprite(int _x, int _y, SDL_Helper * _helper, char * _sprite, int _numFra
 	this->m_opacity = 255;
 	this->m_active = true;
 	this->m_updateYFrame = false;
+	this->m_inLoop = true;
 	this->m_x = _x;
 	this->m_y = _y;
 	this->m_ox = _ox;
@@ -86,6 +87,12 @@ void Sprite::Update()
 						this->m_currentFrameY = 0;
 				}				
 			}
+
+			if (!this->m_inLoop)
+			{
+				if (this->m_currentFrameX == this->m_numFramesX - 1 && this->m_currentFrameY == this->m_numFramesY - 1)
+					this->m_animated = false;
+			}
 		}
 	}
 }
@@ -124,6 +131,25 @@ void Sprite::SetSprite(SDL_Texture * _sprite)
 	this->m_sprite = _sprite;
 }
 
+void Sprite::SetOX(int _value)
+{
+	this->m_ox = _value;
+}
+
+int Sprite::GetOX()
+{
+	return this->m_ox;
+}
+
+void Sprite::SetOY(int _value)
+{
+	this->m_oy = _value;
+}
+
+int Sprite::GetOY()
+{
+	return this->m_oy;
+}
 
 void Sprite::SetX(int _value)
 {
@@ -211,16 +237,31 @@ void Sprite::SetOpacityMode(bool _value)
 	this->m_drawOpacity = _value;
 }
 
-bool Sprite::CheckCollision(Sprite * _other)
+bool Sprite::CheckOverlap(Sprite * _other)
 {
-	if (!this->m_active)
+	if (!this->m_active || !_other->IsActive())
 		return false;
 
-	int x = _other->GetX();
-	int y = _other->GetY();
-	int width = _other->GetFrameSize(true);
-	int height = _other->GetFrameSize(false);
+	int x = _other->GetX() +_other->GetOX();
+	int y = _other->GetY() + _other->GetOY();
+	int width = _other->GetFrameSize(true) - _other->GetOX();
+	int height = _other->GetFrameSize(false) - _other->GetOY();
 
-	return (((x > this->m_x && x < this->m_x + this->m_sizePerFrameX) && (y > this->m_y && y < this->m_y + this->m_sizePerFrameY)) 
-		|| ((this->m_x > x && this->m_x < x + width) && (this->m_y > y && this->m_y < y + height)));
+	return (((x > this->m_x + this->m_ox && x < (this->m_x + this->m_ox) + (this->m_sizePerFrameX-this->m_ox)) && (y > (this->m_y+this->m_oy) && y < (this->m_y + this->m_oy) + (this->m_sizePerFrameY - this->m_oy)))
+		|| ((this->m_x + this->m_ox > x && this->m_x + this->m_ox < x + width) && (this->m_y + this->m_oy > y && this->m_y + this->m_oy < y + height)));
+}
+
+bool Sprite::IsLoop()
+{
+	return this->m_inLoop;
+}
+
+void Sprite::SetInLoop(bool _value)
+{
+	this->m_inLoop = _value;
+}
+
+bool Sprite::IsAnimated()
+{
+	return this->m_animated;
 }

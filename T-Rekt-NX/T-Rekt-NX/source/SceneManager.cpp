@@ -22,7 +22,7 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 #include "TitleScreen.hpp"
 #include "GameScreen.hpp"
 #include "LoadingScreen.hpp"
-
+#include "IntroScreen.hpp"
 #include "Colors.h"
 #include "Filepaths.h"
 
@@ -81,6 +81,9 @@ void SceneManager::SetActualScene(SCENES _scene)
 	case SPLASH:
 		this->m_actualScene = new SplashScreen(this->m_settings);
 		break;
+	case INTRO:
+		this->m_actualScene = new IntroScreen(this->m_settings);
+		break;
 	case TITLE:
 		this->m_actualScene = new TitleScreen(this->m_settings);
 		break;
@@ -92,13 +95,13 @@ void SceneManager::SetActualScene(SCENES _scene)
 	this->m_actualScene->Start(m_helper);
 }
 
-void SceneManager::LoadScene(SCENES _scene)
+void SceneManager::LoadScene(SCENES _scene, int _delayTime)
 {
 	// We delete the pointer of the actual scene
 	if (this->m_actualScene != NULL)
 		delete (this->m_actualScene);
 
-	this->m_actualScene = new LoadingScreen(_scene, this->m_settings);
+	this->m_actualScene = new LoadingScreen(_scene, this->m_settings, _delayTime);
 	this->m_actualScene->Start(m_helper);
 }
 

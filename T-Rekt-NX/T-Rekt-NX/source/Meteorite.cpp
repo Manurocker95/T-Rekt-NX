@@ -22,6 +22,8 @@ void Meteorite::Update()
 		return;
 	}
 
+	Sprite::Update();
+
 	if (this->m_falling)
 	{
 		this->m_y += METEORITE_MOVEMENT * m_speed;
