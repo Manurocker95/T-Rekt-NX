@@ -1,0 +1,14 @@
+{
+  "es": {
+    "loadingText": "Cargando...",
+    "score": "Puntuación:",
+    "debugMode": "MODO DEBUG",
+    "rounds": "Rondas:"
+  },
+  "en": {
+    "loadingText": "Loading...",
+    "score": "Score:",
+    "debugMode": "DEBUG MODE",
+    "rounds": "Rounds:"
+  }
+}

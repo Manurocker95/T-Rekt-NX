@@ -98,6 +98,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="Makefile" />
+    <None Include="romfs\Assets\Files\Localization.json" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Button.cpp" />
@@ -105,6 +106,7 @@
     <ClCompile Include="source\GameScreen.cpp" />
     <ClCompile Include="source\IntroScreen.cpp" />
     <ClCompile Include="source\LoadingScreen.cpp" />
+    <ClCompile Include="source\LocalizationManager.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Meteorite.cpp" />
     <ClCompile Include="source\MusicSound.cpp" />
@@ -129,6 +131,7 @@
     <ClInclude Include="source\GameScreen.hpp" />
     <ClInclude Include="source\IntroScreen.hpp" />
     <ClInclude Include="source\LoadingScreen.hpp" />
+    <ClInclude Include="source\LocalizationManager.hpp" />
     <ClInclude Include="source\Meteorite.hpp" />
     <ClInclude Include="source\MusicSound.hpp" />
     <ClInclude Include="source\SaveData.hpp" />

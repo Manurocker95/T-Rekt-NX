@@ -32,8 +32,31 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 int main(int argc, char* argv[])
 {
 	consoleInit(NULL);
-	plInitialize();
-	romfsInit();
+	Result rc = setInitialize();
+	if (R_FAILED(rc))
+	{
+		consoleExit(NULL);
+		return 0;
+	}
+
+	rc = plInitialize();
+
+	if (R_FAILED(rc))
+	{
+		setExit();
+		consoleExit(NULL);
+		return 0;
+	}
+
+	rc = romfsInit();
+
+	if (R_FAILED(rc))
+	{
+		plExit();
+		setExit();
+		consoleExit(NULL);
+		return 0;
+	}
 
 	mkdir(DATA_FOLDER, 0777);
 
@@ -56,6 +79,8 @@ int main(int argc, char* argv[])
 		helper->SDL_Renderdisplay();
 	}
 
+	consoleExit(NULL);
+	setExit();
 	plExit();
 	romfsExit();
 	SceneManager::Instance()->Exit();

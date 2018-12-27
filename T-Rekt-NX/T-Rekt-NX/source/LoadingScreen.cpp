@@ -39,7 +39,7 @@ LoadingScreen::~LoadingScreen()
 void LoadingScreen::Start(SDL_Helper * helper)
 {
 	this->m_helper = helper;
-	this->m_loadingText = new Text(helper, "Loading...", 1000, 650, 15, false, "", WHITE);	// We wanna use roboto instead of custom font here
+	this->m_loadingText = new Text(helper, SceneManager::Instance()->GetText("loadingText"), 1000, 650, 15, false, "", WHITE);	// We wanna use roboto instead of custom font here
 	this->m_helper->SDL_LoadImage(&this->m_loadingBG, IMG_BG_LOADING);
 	this->m_helper->SDL_PauseMusic();
 }

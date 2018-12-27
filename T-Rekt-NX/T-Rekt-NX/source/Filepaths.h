@@ -24,6 +24,7 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 // save data
 #define DATA_FOLDER "sdmc:/switch/Manurocker95/T-Rekt/"
 #define DATA_FILE "sdmc:/switch/Manurocker95/T-Rekt/data.sav"
+#define TEXT_FILE "sdmc:/switch/Manurocker95/T-Rekt/loc.sav"//"romfs:/Assets/Files/Localization.json"
 
 /* Sounds */
 #define SND_BGM_GAME  "romfs:/Assets/Audio/Music/game.mp3"

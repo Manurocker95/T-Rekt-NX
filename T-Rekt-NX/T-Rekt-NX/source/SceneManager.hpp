@@ -18,12 +18,13 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 
 
 #pragma once
-#ifndef _SCENE_MANAGER_H_
-#define _SCENE_MANAGER_H_
+#ifndef _SCENE_MANAGER_HPP_
+#define _SCENE_MANAGER_HPP_
 
 #include <string>
 #include "Scene.hpp"
 #include "SaveManager.hpp"
+#include "LocalizationManager.hpp"
 
 class SceneManager
 {
@@ -43,6 +44,7 @@ private:
 	Scene * m_actualScene;					// Scene running
 	SDL_Helper * m_helper;					// SDL Helper instance
 	SaveManager * m_saveManager;
+	LocalizationManager * m_LocalizationManager;
 	Settings * m_settings;
 	bool m_out;								// if we ended or not the program
 
@@ -59,7 +61,7 @@ public:
 	void ReadData();						// Method for reading data from our save
 	void SaveData(int _val);
 	void Exit();
-	
+	const char * GetText(char * _key);
 	SDL_Helper * GetHelper();
 
 private:

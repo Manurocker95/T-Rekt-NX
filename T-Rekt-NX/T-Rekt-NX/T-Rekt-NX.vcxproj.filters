@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
+    <None Include="romfs\Assets\Files\Localization.json" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Button.cpp">
@@ -76,6 +77,9 @@
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="source\SaveManager.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="source\LocalizationManager.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
@@ -147,6 +151,9 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="source\SaveData.hpp">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="source\LocalizationManager.hpp">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

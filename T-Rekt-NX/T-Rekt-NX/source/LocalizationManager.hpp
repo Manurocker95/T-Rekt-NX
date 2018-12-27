@@ -18,31 +18,37 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 
 
 #pragma once
-#ifndef _SAVE_MANAGER_HPP_
-#define _SAVE_MANAGER_HPP_
+#ifndef _LOCALIZATION_MANAGER_HPP_
+#define _LOCALIZATION_MANAGER_HPP_
 
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <nlohmann\json.hpp>
-#include "SaveData.hpp"
+#include <switch.h>
+#include <map>
+#include <iostream>
 
 #pragma once
-class SaveManager
+class LocalizationManager
 {
+
 private:
-	
+	std::map < std::string, std::string > * m_texts;
 	nlohmann::json m_json;
-	SaveData * m_data;
+	u64 m_languageCode;
+	const char * m_currentLanguage;
+	bool m_canParse;
+	bool m_gotSystemLanguage;
 
 public:
-	SaveManager();
-	~SaveManager();
+	LocalizationManager();
+	~LocalizationManager();
 
-	Settings * GetSettings();
-
-	void ParseData();
-	void Save(int _score);
-
+	void ParseTexts();
+	const char * GetText(char * _key);
+	bool GotSystemLang() { return this->m_gotSystemLanguage; }
+	bool CanParse() { return this->m_canParse; }
+	bool Initialized() { return this->m_gotSystemLanguage && this->m_canParse; }
 };
 #endif
