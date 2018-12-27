@@ -25,6 +25,7 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 #include <fstream>
 #include <sstream>
 #include "Scene.hpp"
+#include <nlohmann\json.hpp>
 
 class SceneManager
 {
@@ -44,6 +45,8 @@ private:
 	Scene * m_actualScene;					// Scene running
 	SDL_Helper * m_helper;					// SDL Helper instance
 	Settings * m_settings;
+
+	nlohmann::json m_json;
 
 	int m_bestScore;						// Best score
 	bool m_out;								// if we ended or not the program

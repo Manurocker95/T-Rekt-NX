@@ -34,7 +34,6 @@ private:
 
 	SceneManager::SCENES m_nextScene;
 
-
 private:
 	unsigned int m_lastTime;
 	unsigned int m_currentTime;

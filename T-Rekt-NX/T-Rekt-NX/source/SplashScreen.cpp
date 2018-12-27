@@ -72,7 +72,9 @@ void SplashScreen::Update()
 			if (!this->m_sfxSplash)
 			{
 				this->m_sfxSplash = true;
-				this->m_SFX->Play(m_helper);
+
+				if (!this->m_settings->m_muted)
+					this->m_SFX->Play(m_helper);
 			}
 		}
 

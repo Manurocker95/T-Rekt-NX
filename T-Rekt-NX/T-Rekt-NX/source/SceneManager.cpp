@@ -53,16 +53,24 @@ void SceneManager::Start(SDL_Helper * helper)
 void SceneManager::ReadData()
 {
 	std::ifstream myReadFile(DATA_FILE);
-
 	if (myReadFile)
-	{
-		myReadFile >> m_bestScore;
+	{		
+		myReadFile >> this->m_json;
+		this->m_settings->m_muted = this->m_json["muted"];
+		this->m_bestScore = this->m_json["bestScore"];
 	}
 	else
 	{
+		this->m_json =
+		{
+			{ "muted", false },
+			{ "bestScore", 0 },
+		};
+
 		std::ofstream outfile(DATA_FILE);
-		outfile << this->m_bestScore;
+		outfile << this->m_json;
 		outfile.close();
+
 	}
 
 	this->m_actualScene = new SplashScreen(this->m_settings);
@@ -122,13 +130,7 @@ bool SceneManager::IsOut()
 // Simple exiting
 void SceneManager::ExitGame(int _score)
 {
-	if (_score > m_bestScore)
-	{
-		std::ofstream outfile(DATA_FILE);
-		outfile << _score;
-		outfile.close();
-	}
-
+	SaveData(_score);
 	this->m_out = true;
 }
 
@@ -166,8 +168,9 @@ void SceneManager::SaveData(int _value)
 {
 	if (_value > m_bestScore)
 	{
+		this->m_json["bestScore"] = _value;
 		std::ofstream outfile(DATA_FILE);
-		outfile << _value;
+		outfile << this->m_json;
 		outfile.close();
 	}
 }
