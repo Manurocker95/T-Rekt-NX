@@ -70,7 +70,7 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 #define FLOOR_POS 720
 
 #define TIME_TO_START 4
-#define FRAMES_PER_YEAR 10000
+#define FRAMES_PER_YEAR 1000 // a second
 
 #define SPAWN_MIN_X 100
 #define SPAWN_MAX_X 1100

@@ -57,6 +57,7 @@ void SceneManager::ReadData()
 	{		
 		myReadFile >> this->m_json;
 		this->m_settings->m_muted = this->m_json["muted"];
+		this->m_settings->m_debugMode = this->m_json["debugMode"];
 		this->m_bestScore = this->m_json["bestScore"];
 	}
 	else
@@ -64,6 +65,7 @@ void SceneManager::ReadData()
 		this->m_json =
 		{
 			{ "muted", false },
+			{ "debugMode", false },
 			{ "bestScore", 0 },
 		};
 
@@ -169,6 +171,9 @@ void SceneManager::SaveData(int _value)
 	if (_value > m_bestScore)
 	{
 		this->m_json["bestScore"] = _value;
+		this->m_json["muted"] = this->m_settings->m_muted;
+		this->m_json["debugMode"] = this->m_settings->m_debugMode;
+
 		std::ofstream outfile(DATA_FILE);
 		outfile << this->m_json;
 		outfile.close();
