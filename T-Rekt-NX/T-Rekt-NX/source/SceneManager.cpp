@@ -26,9 +26,6 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 #include "Colors.h"
 #include "Filepaths.h"
 
-#include <fstream>
-#include <sstream>
-
 SceneManager * SceneManager::instance = NULL;
 
 SceneManager * SceneManager::Instance()
@@ -42,39 +39,17 @@ SceneManager * SceneManager::Instance()
 // Scene Manager Data initialization
 void SceneManager::Start(SDL_Helper * helper)
 {
-	this->m_settings = new Settings();
+	this->m_saveManager = new SaveManager();
+	this->m_saveManager->ParseData();
 	this->m_helper = helper;
 	this->m_out = false;
-	this->m_bestScore = 0;
 	ReadData();
 }
 
 // We read the data from our .sav
 void SceneManager::ReadData()
 {
-	std::ifstream myReadFile(DATA_FILE);
-	if (myReadFile)
-	{		
-		myReadFile >> this->m_json;
-		this->m_settings->m_muted = this->m_json["muted"];
-		this->m_settings->m_debugMode = this->m_json["debugMode"];
-		this->m_bestScore = this->m_json["bestScore"];
-	}
-	else
-	{
-		this->m_json =
-		{
-			{ "muted", false },
-			{ "debugMode", false },
-			{ "bestScore", 0 },
-		};
-
-		std::ofstream outfile(DATA_FILE);
-		outfile << this->m_json;
-		outfile.close();
-
-	}
-
+	this->m_settings = this->m_saveManager->GetSettings();
 	this->m_actualScene = new SplashScreen(this->m_settings);
 	this->m_actualScene->Start(this->m_helper);
 }
@@ -158,6 +133,7 @@ void SceneManager::CheckInputs()
 
 void SceneManager::Exit()
 {
+	delete(this->m_saveManager);
 	delete(this);
 }
 
@@ -168,14 +144,5 @@ SDL_Helper * SceneManager::GetHelper()
 
 void SceneManager::SaveData(int _value)
 {
-	if (_value > m_bestScore)
-	{
-		this->m_json["bestScore"] = _value;
-		this->m_json["muted"] = this->m_settings->m_muted;
-		this->m_json["debugMode"] = this->m_settings->m_debugMode;
-
-		std::ofstream outfile(DATA_FILE);
-		outfile << this->m_json;
-		outfile.close();
-	}
+	this->m_saveManager->Save(_value);
 }

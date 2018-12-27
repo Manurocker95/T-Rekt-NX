@@ -108,6 +108,8 @@
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Meteorite.cpp" />
     <ClCompile Include="source\MusicSound.cpp" />
+    <ClCompile Include="source\SaveData.cpp" />
+    <ClCompile Include="source\SaveManager.cpp" />
     <ClCompile Include="source\SceneManager.cpp" />
     <ClCompile Include="source\SDL_FontCache.c" />
     <ClCompile Include="source\SDL_Helper.cpp" />
@@ -129,6 +131,8 @@
     <ClInclude Include="source\LoadingScreen.hpp" />
     <ClInclude Include="source\Meteorite.hpp" />
     <ClInclude Include="source\MusicSound.hpp" />
+    <ClInclude Include="source\SaveData.hpp" />
+    <ClInclude Include="source\SaveManager.hpp" />
     <ClInclude Include="source\Scene.hpp" />
     <ClInclude Include="source\SceneManager.hpp" />
     <ClInclude Include="source\SDL_FontCache.h" />

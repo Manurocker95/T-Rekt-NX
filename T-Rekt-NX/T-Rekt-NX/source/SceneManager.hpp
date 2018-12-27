@@ -22,10 +22,8 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 #define _SCENE_MANAGER_H_
 
 #include <string>
-#include <fstream>
-#include <sstream>
 #include "Scene.hpp"
-#include <nlohmann\json.hpp>
+#include "SaveManager.hpp"
 
 class SceneManager
 {
@@ -44,11 +42,8 @@ private:
 	static SceneManager * instance;			// Singleton Instance
 	Scene * m_actualScene;					// Scene running
 	SDL_Helper * m_helper;					// SDL Helper instance
+	SaveManager * m_saveManager;
 	Settings * m_settings;
-
-	nlohmann::json m_json;
-
-	int m_bestScore;						// Best score
 	bool m_out;								// if we ended or not the program
 
 public:
