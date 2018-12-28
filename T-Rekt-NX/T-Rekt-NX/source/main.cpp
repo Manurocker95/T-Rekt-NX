@@ -32,31 +32,8 @@ Copyright (C) 2018/2019 Manuel Rodríguez Matesanz
 int main(int argc, char* argv[])
 {
 	consoleInit(NULL);
-	Result rc = setInitialize();
-	if (R_FAILED(rc))
-	{
-		consoleExit(NULL);
-		return 0;
-	}
-
-	rc = plInitialize();
-
-	if (R_FAILED(rc))
-	{
-		setExit();
-		consoleExit(NULL);
-		return 0;
-	}
-
-	rc = romfsInit();
-
-	if (R_FAILED(rc))
-	{
-		plExit();
-		setExit();
-		consoleExit(NULL);
-		return 0;
-	}
+	plInitialize();
+	romfsInit();
 
 	mkdir(DATA_FOLDER, 0777);
 
@@ -65,25 +42,28 @@ int main(int argc, char* argv[])
 	
 	SceneManager::Instance()->Start(helper);
 
-	// Main loop
-	while (appletMainLoop())
+	if (!SceneManager::Instance()->IsOut())
 	{
-		helper->SDL_ClearScreen(BLACK);
-		helper->SDL_DrawRect(0, 0, SWITCH_SCREEN_WIDTH, SWITCH_SCREEN_HEIGHT, WHITE);
-		
-		SceneManager::Instance()->Update();
+		// Main loop
+		while (appletMainLoop())
+		{
+			helper->SDL_ClearScreen(BLACK);
+			helper->SDL_DrawRect(0, 0, SWITCH_SCREEN_WIDTH, SWITCH_SCREEN_HEIGHT, WHITE);
 
-		if (SceneManager::Instance()->IsOut())
-			break; // break in order to return to hbmenu
+			SceneManager::Instance()->Update();
 
-		helper->SDL_Renderdisplay();
+			if (SceneManager::Instance()->IsOut())
+				break; // break in order to return to hbmenu
+
+			helper->SDL_Renderdisplay();
+		}
 	}
 
 	consoleExit(NULL);
-	setExit();
 	plExit();
 	romfsExit();
 	SceneManager::Instance()->Exit();
+	delete(SceneManager::Instance());
 	helper->SDL_Exit();
 	delete(helper);
 

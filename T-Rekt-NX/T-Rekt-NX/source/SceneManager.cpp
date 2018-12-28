@@ -40,11 +40,10 @@ SceneManager * SceneManager::Instance()
 void SceneManager::Start(SDL_Helper * helper)
 {
 	this->m_LocalizationManager = new LocalizationManager();
-	this->m_out = !this->m_LocalizationManager->Initialized();
 	this->m_saveManager = new SaveManager();
 	this->m_saveManager->ParseData();
 	this->m_helper = helper;
-
+	this->m_out = (this->m_LocalizationManager->Initialized()) ? false : true;
 	ReadData();
 }
 
@@ -135,9 +134,10 @@ void SceneManager::CheckInputs()
 
 void SceneManager::Exit()
 {
+	delete(this->m_actualScene);
 	delete(this->m_LocalizationManager);
 	delete(this->m_saveManager);
-	delete(this);
+	//delete(instance);
 }
 
 SDL_Helper * SceneManager::GetHelper()

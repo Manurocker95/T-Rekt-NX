@@ -34,10 +34,9 @@ class LocalizationManager
 {
 
 private:
-	std::map < std::string, std::string > * m_texts;
 	nlohmann::json m_json;
 	u64 m_languageCode;
-	const char * m_currentLanguage;
+	std::string m_currentLanguage;
 	bool m_canParse;
 	bool m_gotSystemLanguage;
 
@@ -49,6 +48,6 @@ public:
 	const char * GetText(char * _key);
 	bool GotSystemLang() { return this->m_gotSystemLanguage; }
 	bool CanParse() { return this->m_canParse; }
-	bool Initialized() { return this->m_gotSystemLanguage && this->m_canParse; }
+	bool Initialized();
 };
 #endif
